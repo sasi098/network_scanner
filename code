@@ -1,0 +1,55 @@
+#!/usr/bin/env python
+
+import scapy.all as scapy
+import optparse
+def get_arguments():
+    parser = optparse.OptionParser()
+    parser.add_option("-t", "--target", dest="target", help="Target IP / IP range.")
+    options, arguments = parser.parse_args()
+    return options
+
+
+def scan(ip):
+    arp_request = scapy.ARP(pdst=ip)
+    broadcast = scapy.Ether(dst="ff:ff:ff:ff:ff:ff")
+    arp_request_broadcast = broadcast/arp_request
+    # answered, unanswered = scapy.srp(arp_request_broadcast, timeout=1)
+    # print(answered.summary())
+    answered = scapy.srp(arp_request_broadcast, timeout=1, verbose=False)[0]
+    clients_list = []
+    for element in answered:
+        client_dict = {"ip": element[1].psrc, "mac": element[1].hwsrc}
+        clients_list.append(client_dict)
+    return clients_list
+        # print(element[1].psrc + "\t\t" + element[1].hwsrc)
+
+
+def printout(answered):
+    print("ipaddress\t\t\tmacaddress\n-----------------------------------------")
+
+    for element in answered:
+        print(element["ip"] + "\t\t" + element["mac"])
+
+
+
+    # print(unanswered.summary()) TO GET UNANSWED PACKETS
+
+    #TO SHOW WHAT THEY ARE
+    # arp_request.show()
+    # broadcast.show()
+    # arp_request_broadcast.show()
+
+    # print(arp_request_broadcast.summary())
+    # scapy.ls(scapy.Ether()) TO GET FUNCTIONS OF ETHER MODULE IN SCAAPY
+    # print(arp_request.summary())
+    # print(broadcast.summary()) TO PRINT SUMMARY IN ONE LINE
+
+options = get_arguments()
+scan_result = scan(options.target)
+printout(scan_result)
+
+# scan_result = scan("192.168.235.153/24")
+# printout(scan_result)
+
+# use command python (filename) -t ipaddress/24
+# we can use argparse instead of optparse we want to  run in python3
