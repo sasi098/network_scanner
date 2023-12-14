@@ -1,0 +1,17 @@
+1 ---- ifconfig(get your ip address)
+2 ---- python networkscanner.py -t (your IP address)/24
+
+If there is any devices then it gwt the ip address and mac address of that connected device
+ipaddress			macaddress
+-----------------------------------------
+(IP address)    (MAC address)
+(IP address)    (MAC address)
+'                '
+'                '
+'                '
+
+if ther is no devices it will show ->
+ipaddress			macaddress
+-----------------------------------------
+
+
